@@ -1,0 +1,6 @@
+{
+	"WebURL": {
+		"type": "string",
+		"value": "https://mentoring-key-vault-ds.vault.azure.net/secrets/azurelogicappsecret/f58a578a62ef4cf4865699c85c528f73?api-version=7.0"
+	}
+}

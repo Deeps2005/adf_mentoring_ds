@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "mentoring-adf-ds"
+		},
+		"LS_ABLB_Ratings_connectionString": {
+			"value": ""
+		},
+		"LS_ABLB_online_del_connectionString": {
+			"value": ""
+		},
+		"LS_ADLS_raw_online_json_accountKey": {
+			"value": ""
+		},
+		"AzureBlobStorage_ds_properties_typeProperties_sasUri_secretName": {
+			"value": "azureblobsecret"
+		},
+		"AzureDataLakeStorage_ds_properties_typeProperties_url": {
+			"value": "https://azurementoringdatalakeds.dfs.core.windows.net"
+		},
+		"AzureKeyVault_ds_properties_typeProperties_baseUrl": {
+			"value": "https://mentoring-key-vault-ds.vault.azure.net/"
+		},
+		"LS_ABLB_SRC_Online_properties_typeProperties_sasUri_secretName": {
+			"value": "azureblobsecretonline"
+		},
+		"LS_ADLS_Ratings_properties_typeProperties_url": {
+			"value": "https://azurementoringdatalakeds.dfs.core.windows.net"
+		},
+		"LS_ADLS_raw_online_json_properties_typeProperties_url": {
+			"value": "https://azurementoringdatalakeds.dfs.core.windows.net/"
+		},
+		"LS_ASQL_SINK_DataMart_properties_typeProperties_connectionString_secretName": {
+			"value": "azuresqlsecretdatamart"
+		},
+		"LS_ASQL_SINK_staging_data_properties_typeProperties_connectionString_secretName": {
+			"value": "azuresqlsecret"
+		},
+		"LS_MSSQL_SRC_CinemaTickets_properties_typeProperties_connectionString_secretName": {
+			"value": "mssqlsecret"
+		}
+	}
+}
