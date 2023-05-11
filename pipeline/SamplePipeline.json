@@ -1,0 +1,20 @@
+{
+	"name": "SamplePipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 10
+				}
+			}
+		],
+		"folder": {
+			"name": "Module_12"
+		},
+		"annotations": []
+	}
+}
