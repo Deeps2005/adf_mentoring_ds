@@ -1,0 +1,70 @@
+{
+	"name": "DS_ASQL_ControlMetadata_Generic",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_SINK_staging_data",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MODULE_09"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Container",
+				"type": "varchar"
+			},
+			{
+				"name": "Folder",
+				"type": "varchar"
+			},
+			{
+				"name": "FileName",
+				"type": "varchar"
+			},
+			{
+				"name": "ColumnDelimiter",
+				"type": "varchar"
+			},
+			{
+				"name": "Encoding",
+				"type": "varchar"
+			},
+			{
+				"name": "EscapeCharacter",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QuoteCharacter",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SchemaName",
+				"type": "varchar"
+			},
+			{
+				"name": "TableName",
+				"type": "varchar"
+			},
+			{
+				"name": "DIUValue",
+				"type": "varchar"
+			},
+			{
+				"name": "Mapping",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "etl",
+			"table": "tControlMetadata"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

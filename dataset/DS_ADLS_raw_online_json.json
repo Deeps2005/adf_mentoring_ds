@@ -1,0 +1,22 @@
+{
+	"name": "DS_ADLS_raw_online_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage_ds",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MODULE_07"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "online",
+				"fileSystem": "raw"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

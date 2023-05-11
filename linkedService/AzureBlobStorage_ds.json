@@ -1,0 +1,19 @@
+{
+	"name": "AzureBlobStorage_ds",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"sasUri": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault_ds",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "azureblobsecret",
+				"secretVersion": "3f1a508644764d288bdcb374b6fffd31"
+			}
+		}
+	}
+}

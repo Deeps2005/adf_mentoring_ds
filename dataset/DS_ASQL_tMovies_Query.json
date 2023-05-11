@@ -1,0 +1,16 @@
+{
+	"name": "DS_ASQL_tMovies_Query",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_SINK_staging_data",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MODULE_08"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

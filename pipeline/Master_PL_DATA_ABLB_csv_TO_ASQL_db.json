@@ -1,0 +1,138 @@
+{
+	"name": "Master_PL_DATA_ABLB_csv_TO_ASQL_db",
+	"properties": {
+		"activities": [
+			{
+				"name": "Load_ABLB_csv_TO_ADLS_csv",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_DS_ABLB_DS_movies_TO_ADLS_raw_movies",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Load_ADLS_csv_TO_ASQL_table",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Load_ADLS_credits_TO_ASQL_credits_table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Load_ADLS_movies_metadata_TO_ASQL_movies_metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Load_ADLS_ratings_TO_ASQL_ratings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_ADLS_csv_TO_ASQL_db",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Archive_ADLS_raw_movies_TO_ADLS_raw_movies_archive",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Load_ADLS_csv_TO_ASQL_table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_ADLS_raw_movies_TO_ADLS_raw_movies_archive",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Load_ADLS_credits_TO_ASQL_credits_table",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Load_ABLB_csv_TO_ADLS_csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_ADLS_credits_TO_ASQL_credits",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Load_ADLS_movies_metadata_TO_ASQL_movies_metadata",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Load_ABLB_csv_TO_ADLS_csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_ADLS_movies_metadata_TO_ASQL_movies_metadata",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Load_ADLS_ratings_TO_ASQL_ratings",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Load_ABLB_csv_TO_ADLS_csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_ADLS_ratings_TO_ASQL_ratings",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Module_05"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-24T17:47:42Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

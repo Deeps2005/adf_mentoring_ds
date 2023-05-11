@@ -1,0 +1,66 @@
+{
+	"name": "Master_PL_DATA_ABLB_online_json_TO_ASQL_db",
+	"properties": {
+		"activities": [
+			{
+				"name": "LoadjsonFromABLBtoADLS",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_INC_ABLB_online_TO_ADLS_raw_online",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Load_From_ADLS_To_ASQL_DB",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "LoadjsonFromABLBtoADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_ADLS_raw_online_TO_ASQL_online_purchase",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "ArchiveFiles",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Load_From_ADLS_To_ASQL_DB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_ADLS_raw_online_json_TO_ADLS_raw_online_archive_json",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Module_07"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-04T13:44:06Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

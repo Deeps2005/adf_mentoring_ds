@@ -1,0 +1,264 @@
+{
+	"name": "DF_SRC_Movies_To_TGT_DataMart",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_tMovies_Query",
+						"type": "DatasetReference"
+					},
+					"name": "SRCMovies"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_tOnlineService",
+						"type": "DatasetReference"
+					},
+					"name": "SRCOnlineService"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_DimMovie",
+						"type": "DatasetReference"
+					},
+					"name": "DimMovies"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_DimOnlineService",
+						"type": "DatasetReference"
+					},
+					"name": "DimOnlineService"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_DimMovie",
+						"type": "DatasetReference"
+					},
+					"name": "SinkDimMovies"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_DimOnlineService",
+						"type": "DatasetReference"
+					},
+					"name": "SinkDimOnlineService"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_DimMovie",
+						"type": "DatasetReference"
+					},
+					"name": "SinkDimMoviesUpdate"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_DimOnlineService",
+						"type": "DatasetReference"
+					},
+					"name": "SinkDimOnlineServieUpdate"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AuditColumnsAddition"
+				},
+				{
+					"name": "AuditColumnsAdditionOnlineService"
+				},
+				{
+					"name": "NotExistsInTarget"
+				},
+				{
+					"name": "InsertIf"
+				},
+				{
+					"name": "ExistsInTarget"
+				},
+				{
+					"name": "UpdateIf"
+				},
+				{
+					"name": "AuditColumnsModification"
+				},
+				{
+					"name": "NotExistsInDimOnlineMovies"
+				},
+				{
+					"name": "ExistsInDimOnlineMovies"
+				},
+				{
+					"name": "UpdateIfDimOnlineService"
+				},
+				{
+					"name": "AuditColumnsModificationOnlineService"
+				},
+				{
+					"name": "InsertIfDimOnlineService"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          MovieIdNK as integer,",
+				"          Title as string,",
+				"          ReleaseDate as date,",
+				"          Runtime as integer,",
+				"          MovieStatusName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select tm.MovieIdNK, tm.Title, tm.ReleaseDate, tm.Runtime, tms.MovieStatusName from [dbo].[tMovies] tm\\njoin [dbo].[tMovieStatus] tms ON (tm.MovieStatusId=tms.MovieStatusId)\\nwhere tm.MovieIdNK IN(100032,100063);',",
+				"     format: 'query') ~> SRCMovies",
+				"source(output(",
+				"          ServiceId as integer,",
+				"          ServiceCode as string,",
+				"          ServiceName as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SRCOnlineService",
+				"source(output(",
+				"          MovieKey as integer,",
+				"          MovieIdNK as integer,",
+				"          Title as string,",
+				"          ReleaseDate as date,",
+				"          Runtime as integer,",
+				"          MovieStatus as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> DimMovies",
+				"source(output(",
+				"          ServiceKey as integer,",
+				"          ServiceCode as string,",
+				"          ServiceName as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> DimOnlineService",
+				"InsertIf derive(CreatedDate = currentUTC(),",
+				"          ModifiedDate = currentUTC()) ~> AuditColumnsAddition",
+				"InsertIfDimOnlineService derive(CreatedDate = currentUTC(),",
+				"          ModifiedDate = currentUTC()) ~> AuditColumnsAdditionOnlineService",
+				"SRCMovies, DimMovies exists(SRCMovies@MovieIdNK == DimMovies@MovieIdNK,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> NotExistsInTarget",
+				"NotExistsInTarget alterRow(insertIf(1==1)) ~> InsertIf",
+				"SRCMovies, DimMovies exists(SRCMovies@MovieIdNK == DimMovies@MovieIdNK,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> ExistsInTarget",
+				"ExistsInTarget alterRow(updateIf(1==1)) ~> UpdateIf",
+				"UpdateIf derive(ModifiedDate = currentUTC()) ~> AuditColumnsModification",
+				"SRCOnlineService, DimOnlineService exists(SRCOnlineService@ServiceName == DimOnlineService@ServiceName,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> NotExistsInDimOnlineMovies",
+				"SRCOnlineService, DimOnlineService exists(SRCOnlineService@ServiceName == DimOnlineService@ServiceName,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> ExistsInDimOnlineMovies",
+				"ExistsInDimOnlineMovies alterRow(updateIf(1==1)) ~> UpdateIfDimOnlineService",
+				"UpdateIfDimOnlineService derive(ModifiedDate = 1==1) ~> AuditColumnsModificationOnlineService",
+				"NotExistsInDimOnlineMovies alterRow(insertIf(1==1)) ~> InsertIfDimOnlineService",
+				"AuditColumnsAddition sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          MovieKey as integer,",
+				"          MovieIdNK as integer,",
+				"          Title as string,",
+				"          ReleaseDate as date,",
+				"          Runtime as integer,",
+				"          MovieStatus as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkDimMovies",
+				"AuditColumnsAdditionOnlineService sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ServiceKey as integer,",
+				"          ServiceCode as string,",
+				"          ServiceName as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkDimOnlineService",
+				"AuditColumnsModification sink(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     input(",
+				"          MovieKey as integer,",
+				"          MovieIdNK as integer,",
+				"          Title as string,",
+				"          ReleaseDate as date,",
+				"          Runtime as integer,",
+				"          MovieStatus as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['Title','ReleaseDate','Runtime','MovieStatus'],",
+				"     skipKeyWrites:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          MovieIdNK,",
+				"          Title,",
+				"          ReleaseDate,",
+				"          Runtime,",
+				"          MovieStatus = MovieStatusName,",
+				"          ModifiedDate",
+				"     )) ~> SinkDimMoviesUpdate",
+				"AuditColumnsModificationOnlineService sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ServiceKey as integer,",
+				"          ServiceCode as string,",
+				"          ServiceName as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkDimOnlineServieUpdate"
+			]
+		}
+	}
+}

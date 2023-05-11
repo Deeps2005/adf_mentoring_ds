@@ -1,0 +1,20 @@
+{
+	"name": "DS_MSQL_watermarktable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_MSSQL_SRC_CinemaTickets",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MODULE_06"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "watermarktable"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

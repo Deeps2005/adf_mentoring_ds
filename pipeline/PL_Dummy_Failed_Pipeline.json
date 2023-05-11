@@ -1,0 +1,23 @@
+{
+	"name": "PL_Dummy_Failed_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Fail",
+				"type": "Fail",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Intentional fail",
+					"errorCode": "500"
+				}
+			}
+		],
+		"folder": {
+			"name": "Module_10"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-19T16:43:40Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

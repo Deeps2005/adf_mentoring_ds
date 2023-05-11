@@ -1,0 +1,20 @@
+{
+	"name": "DS_ASQL_ratings_all",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_SINK_staging_data",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MODULE_05"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "stg",
+			"table": "ratings"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

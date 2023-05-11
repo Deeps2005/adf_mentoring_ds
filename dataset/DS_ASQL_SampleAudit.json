@@ -1,0 +1,30 @@
+{
+	"name": "DS_ASQL_SampleAudit",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_SINK_staging_data",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "dept",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "stg",
+			"table": "SampleAudit"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
